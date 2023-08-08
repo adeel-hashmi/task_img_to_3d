@@ -1,25 +1,19 @@
 import React, { useState } from 'react';
 import './App.css';
+import Model from './components/Model';
 
 function App() {
-  const [selectedImages, setSelectedImages] = useState([]);
-  const [dimensions, setDimensions] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [dimensions, setDimensions] = useState({ width: 'N/A', height: 'N/A', depth: 'N/A' });
 
   const handleImageUpload = (event) => {
-    const imageFiles = event.target.files;
-    const imageArray = Array.from(imageFiles);
+    const imageFile = event.target.files[0];
+    setSelectedImage(URL.createObjectURL(imageFile));
 
-    setSelectedImages(imageArray);
-
-    // Call the backend API to process images and get dimensions
+    // You can call the backend API to process the image and get dimensions here
     // Replace the API call with your actual implementation
     // For now, we'll set dummy dimensions
-    const dummyDimensions = Array(imageArray.length).fill({
-      width: '10 cm',
-      height: '15 cm',
-      depth: '5 cm',
-    });
-    setDimensions(dummyDimensions);
+    setDimensions({ width: '10 cm', height: '15 cm', depth: '5 cm' });
   };
 
   return (
@@ -30,15 +24,12 @@ function App() {
         </header>
         <div className="content">
           <section className="image-section">
-            <input type="file" accept="image/*" multiple onChange={handleImageUpload} />
-            <div className="selected-images">
-              {selectedImages.map((image, index) => (
-                <img key={index} src={URL.createObjectURL(image)} alt={`Uploaded ${index}`} className="selected-image" />
-              ))}
-            </div>
+            <input type="file" accept="image/*" onChange={handleImageUpload} />
+            {selectedImage && <img src={selectedImage} alt="Uploaded" className="selected-image" />}
           </section>
           <section className="model-section">
-          
+          <Model url="https://threejs.org/examples/models/car.gltf" />
+
             {/* Add your Three.js 3D model preview here */}
             {/* Replace with your Three.js implementation */}
             <div className="dummy-3d-model">Dummy 3D Model</div>
@@ -46,23 +37,19 @@ function App() {
           <section className="dimensions-section">
             <h2>Object Dimensions</h2>
             <table>
-              <thead>
-                <tr>
-                  <th>Image</th>
-                  <th>Width</th>
-                  <th>Height</th>
-                  <th>Depth</th>
-                </tr>
-              </thead>
               <tbody>
-                {dimensions.map((dim, index) => (
-                  <tr key={index}>
-                    <td>Image {index + 1}</td>
-                    <td>{dim.width}</td>
-                    <td>{dim.height}</td>
-                    <td>{dim.depth}</td>
-                  </tr>
-                ))}
+                <tr>
+                  <td>Width:</td>
+                  <td>{dimensions.width}</td>
+                </tr>
+                <tr>
+                  <td>Height:</td>
+                  <td>{dimensions.height}</td>
+                </tr>
+                <tr>
+                  <td>Depth:</td>
+                  <td>{dimensions.depth}</td>
+                </tr>
               </tbody>
             </table>
           </section>

@@ -4,7 +4,7 @@ const axios = require('axios');
 const app = express();
 const port = 5000;
 
-// Set up image upload using Multer
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
